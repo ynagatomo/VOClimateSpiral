@@ -14,34 +14,26 @@ struct ContentView: View {
     @State private var showClimateSpiral = false
 
     var body: some View {
-        VStack {
-            VStack {
-                Text("Tap the button below to see the Climate Spiral.")
-                    .padding(.vertical, 24)
-
-                Toggle("Show Climate Spiral", isOn: $showClimateSpiral)
-                    .toggleStyle(.button)
-            }
-            .padding(44)
-            .glassBackgroundEffect()
-
+        ZStack {
             if showClimateSpiral {
                 RealityView { content in
-                    // note: this empty Scene is needed at this moment (I don't know why.)
-                    if let scene = try? await Entity(named: "Scene", in: realityKitContentBundle) {
-                        content.add(scene)
-                    }
-
-                    // generate the Climate Spiral geometry and attach it to the content
                     await ModelManager.shared.setupSpiralModel()
                     let entity = ModelManager.shared.spiralEntity
-                    entity.transform.translation = SIMD3<Float>(0.7, 0, 0) // offset for the control panel
                     content.add(entity)
+                    entity.scale = SIMD3<Float>(repeating: 0.4)
                 }
-                .frame(width: 200, height: 400)
-            } else {
-                Color(.clear)                    // Spacer to place the control panel at the same position
-                    .frame(width: 200, height: 400)
+            }
+
+            VStack {
+                Spacer()
+                VStack {
+                    Text("Tap the button below to see the Climate Spiral.")
+                        .padding(.vertical, 24)
+                    Toggle("Show Climate Spiral", isOn: $showClimateSpiral)
+                        .toggleStyle(.button)
+                }
+                .padding(44)
+                .glassBackgroundEffect()
             }
         }
         .onAppear {

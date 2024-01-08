@@ -20,7 +20,6 @@ struct VOClimateSpiralApp: App {
             ContentView()
         }
         .windowStyle(.volumetric)
-        .defaultSize(width: 4000, height: 3000, depth: 3000)
 
         WindowGroup("", id: "web") {
             WebpageView()
